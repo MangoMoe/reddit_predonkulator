@@ -1,0 +1,11 @@
+
+## OAUTH STUFF
+[DEFAULT]
+# A string that, if given, defines the client_id a reddit object is initialized with.
+client_id=
+# A string that, if given, defines the client_secret a reddit object is initialized with.
+client_secret=
+# A string that, if given, defines the redirect_uri a reddit object is initialized with. If oauth_client_id and oauth_client_secret is also given, then get_authorize_url() can be run without first setting the oauth settings with running set_oauth_app_info().
+# TODO which should this be?
+redirect_uri=http://localhost:9001/authorize_callback 
+# redirect_uri=http://localhost:9001

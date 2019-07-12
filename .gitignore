@@ -1,3 +1,6 @@
+# don't commit the configuration file with the client secret in it
+praw.ini
+
 # ignore json files for now
 *.json
 
