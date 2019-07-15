@@ -14,6 +14,7 @@ class reddit_accessor:
         import webbrowser
         # click allow on the displayed web page
         webbrowser.open(url)
+        print("Initial authorization in progress")
 
     def apply_authorization_code(self, code):
         # this line shows the logged in user and lets us know it worked correctly and we are authorized
@@ -22,6 +23,7 @@ class reddit_accessor:
         print(self.refresh_token)
         print(self.reddit.user.me())
         print(self.reddit.auth.scopes())
+        print("Authorization code applied, we should be authorized now")
 
     def refresh_with_token(self):
         self.reddit = praw.Reddit(refresh_token=self.refresh_token,
