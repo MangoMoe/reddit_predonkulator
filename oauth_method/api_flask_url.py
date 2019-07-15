@@ -13,7 +13,7 @@ def startup_accessor():
 
 class CustomServer(Server):
     def __call__(self, app, *args, **kwargs):
-        startup_accessor()
+        # startup_accessor()
         #Hint: Here you could manipulate app
         return Server.__call__(self, app, *args, **kwargs)
 
@@ -24,7 +24,13 @@ manager.add_command('runserver', CustomServer(port=9001))
 
 @app.route('/')
 def homepage():
-    return "<p>This is a homepage, trust me</p>"
+    with open("../webpage/homepage.html", "r") as page:
+        return page.read()
+
+@app.route('/predonkulator')
+def predonkulator_page():
+    with open("../webpage/predonkulator.html") as page:
+        return page.read()
 
 @app.route('/authorize_callback')
 def reddit_callback():
