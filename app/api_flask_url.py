@@ -1,8 +1,10 @@
-from flask import abort, request, Flask
+from flask import abort, request, Flask, render_template
 from flask_script import Manager, Server
-from reddit_accessor import reddit_accessor
+from oauth_method.reddit_accessor import reddit_accessor
+
 # this one below this line is incorrect, but the linter can't find the class unless its that way
 # from oauth_method.reddit_accessor import reddit_accessor
+
 
 app = Flask(__name__)
 accessor = reddit_accessor()
@@ -24,13 +26,12 @@ manager.add_command('runserver', CustomServer(port=9001))
 
 @app.route('/')
 def homepage():
-    with open("../webpage/homepage.html", "r") as page:
-        return page.read()
+        return render_template("homepage.html")
+
 
 @app.route('/predonkulator')
 def predonkulator_page():
-    with open("../webpage/predonkulator.html") as page:
-        return page.read()
+    return render_template("predonkulator.html")
 
 @app.route('/authorize_callback')
 def reddit_callback():
