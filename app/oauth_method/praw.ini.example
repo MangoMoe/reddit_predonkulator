@@ -1,6 +1,6 @@
 
-# Hello there, to get praw to work, put this in the working directory of where you are running a file using praw, insert your app's client_id and client_secret, and rename the file to take off the `.example` so it is just `praw.ini`
-
+# Hello there, to get praw to work, put this in the working directory of your app, insert your app's client_id and client_secret, and rename the file to take off the `.example` so it is just `praw.ini`
+# the client secret and id are here: https://www.reddit.com/prefs/apps
 
 ## OAUTH STUFF
 [DEFAULT]
