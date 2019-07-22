@@ -13,7 +13,14 @@ class oauth_accessor(accessor_interface):
         self.refresh_time = datetime.datetime.now()
 
     def get_subreddit(self, subreddit):
-        return self.reddit.subreddit(subreddit).hot()
+        print("Name: ", self.reddit.subreddit(subreddit).display_name)
+        print("Subreddit stuff: ", self.reddit.subreddit(subreddit))
+        print(self.reddit.user.me())
+        print(self.reddit.auth.scopes())
+        # print(self.reddit.subreddit(subreddit).submissions)
+        for submission in self.reddit.subreddit(subreddit).hot():
+            print(submission.title)
+        return self.reddit.subreddit(subreddit)
         
     def reauthorize(self):
         self.refresh_with_token()
@@ -34,7 +41,7 @@ class oauth_accessor(accessor_interface):
         self.reddit = praw.Reddit(user_agent="web:Reddit Predonkulator:0.1 (by /u/MangoMo3)")
 
         import uuid
-        url = self.reddit.auth.url(['identity'], uuid.uuid4(), 'permanent')
+        url = self.reddit.auth.url(['identity', 'read'], uuid.uuid4(), 'permanent')
         print("Initial authorization url found")
         return url
 

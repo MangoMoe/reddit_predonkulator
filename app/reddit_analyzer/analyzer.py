@@ -4,7 +4,5 @@ class analyzer:
 
     def analyze_subreddit(self, query):
         subreddit = self.accessor.get_subreddit(query)
-        for hot in subreddit:
-            print(hot)
-        # print("Printing subreddit ",subreddit)
+        
         
