@@ -3,6 +3,10 @@ class post_data:
         # TODO finish this method
         # Top, new, rising, controversial, Hot
         # Duration
+            
+        # can't have both text and image
+        # either have image and maybe description in comment or have text with link to an image
+            
         self.title = title
         self.body_image = body_image
         self.body_text = body_text

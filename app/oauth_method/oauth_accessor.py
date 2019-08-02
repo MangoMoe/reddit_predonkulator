@@ -21,19 +21,6 @@ class oauth_accessor(accessor_interface):
         for submission in self.reddit.subreddit(subreddit_name).hot():
             print(submission.title)
         return self.reddit.subreddit(subreddit_name)
-    '''
-    upvotes
-    downvotes
-    body image
-    title
-    number of comments
-    body text
-    flair
-
-
-    can't have both text and image
-    either have image and maybe description in comment or have text with link to an image
-     '''
 
     def reauthorize(self):
         self.refresh_with_token()
