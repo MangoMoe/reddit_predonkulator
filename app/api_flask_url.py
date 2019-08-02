@@ -1,6 +1,7 @@
 from flask import abort, request, redirect, Flask, render_template
 from flask_script import Manager, Server
 from oauth_method.oauth_accessor import oauth_accessor
+
 from reddit_analyzer.analyzer import analyzer as red_analyzer
 # this one below this line is incorrect, but the linter can't find the class unless its that way
 # from oauth_method.reddit_accessor import reddit_accessor
