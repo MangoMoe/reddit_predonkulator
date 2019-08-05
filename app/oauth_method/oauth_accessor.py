@@ -4,6 +4,13 @@ import datetime
 import sys
 sys.path.append("..") # Adds higher directory to python modules path.
 from app.accessor_interface import accessor_interface
+from app.post_data import post_data
+# TODO temp import
+import pprint
+import requests
+import urllib, StringIO
+from PIL import Image
+
 
 # class oauth_accessor(accessor_interface.accessor_interface):
 class oauth_accessor(accessor_interface):
@@ -13,14 +20,41 @@ class oauth_accessor(accessor_interface):
         self.refresh_time = datetime.datetime.now()
 
     def get_subreddit(self, subreddit_name):
-        print("Name: ", self.reddit.subreddit(subreddit_name).display_name)
-        print("Subreddit stuff: ", self.reddit.subreddit(subreddit_name))
-        print(self.reddit.user.me())
-        print(self.reddit.auth.scopes())
+       
         # print(self.reddit.subreddit(subreddit).submissions)
-        for submission in self.reddit.subreddit(subreddit_name).hot():
-            print(submission.title)
+        
         return self.reddit.subreddit(subreddit_name)
+
+    # TODO move to utility. can be used for json accessor as well
+    def is_gif_url(self, url):
+        if "gif" in url:
+            return True
+        elif "gfycat" in url:
+            return True
+        else:
+            return False
+
+    def get_hot_posts(self, subreddit_name, num_posts, images_only=True):   
+        subreddit = self.get_subreddit(subreddit_name)
+        # TODO break when we get enough of the right kind of post
+        post_list = []
+        for submission in subreddit.hot(limit=num_posts * 10):
+            if images_only:
+                # if the thumbnail height is not None and media is None and the url is not a gif, it is an image post
+                if submission.thumbnail_height != None and submission.media == None and not self.is_gif_url(submission.url):
+                    # img_data = requests.get(submission.url).content
+                    file = cStringIO.StringIO(urllib.urlopen(submission.url).read())
+                    img_data=Image.open(file)
+                    width, height = img_data.size
+                    print(width)
+                    break
+                    post_list.append(post_data(submission.title, img_data, None, submission.ups, submission.downs, None, None))
+                    if len(post_list) >= num_posts:
+                        break
+            # TODO later figure out if text post
+            # elif:
+            #      pass
+        return post_list
 
     def reauthorize(self):
         self.refresh_with_token()
