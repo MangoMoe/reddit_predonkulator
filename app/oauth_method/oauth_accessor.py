@@ -5,11 +5,9 @@ import sys
 sys.path.append("..") # Adds higher directory to python modules path.
 from app.accessor_interface import accessor_interface
 from app.post_data import post_data
-# TODO temp import
-import pprint
 import requests
-import urllib, StringIO
 from PIL import Image
+import numpy as np
 
 
 # class oauth_accessor(accessor_interface.accessor_interface):
@@ -27,6 +25,7 @@ class oauth_accessor(accessor_interface):
 
     # TODO move to utility. can be used for json accessor as well
     def is_gif_url(self, url):
+        print(url)
         if "gif" in url:
             return True
         elif "gfycat" in url:
@@ -41,14 +40,19 @@ class oauth_accessor(accessor_interface):
         for submission in subreddit.hot(limit=num_posts * 10):
             if images_only:
                 # if the thumbnail height is not None and media is None and the url is not a gif, it is an image post
-                if submission.thumbnail_height != None and submission.media == None and not self.is_gif_url(submission.url):
-                    # img_data = requests.get(submission.url).content
-                    file = cStringIO.StringIO(urllib.urlopen(submission.url).read())
-                    img_data=Image.open(file)
-                    width, height = img_data.size
-                    print(width)
-                    break
-                    post_list.append(post_data(submission.title, img_data, None, submission.ups, submission.downs, None, None))
+                # The post_hint tells you what type of post it is
+                # if submission.thumbnail_height != None and submission.media == None and not self.is_gif_url(submission.url):
+                # print("post_hint" in vars(submission).keys())
+                if not hasattr(submission, "post_hint"):
+                    continue
+                # print(submission.post_hint)
+                if submission.post_hint == "image":
+                    img = Image.open(requests.get(submission.url, stream=True).raw)
+
+                    # Saving an image
+                    # im = Image.fromarray(img_array)
+                    # im.save("your_file.jpeg")
+                    post_list.append(post_data(submission.title, img, None, submission.ups, submission.downs, None, None))
                     if len(post_list) >= num_posts:
                         break
             # TODO later figure out if text post

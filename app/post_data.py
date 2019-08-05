@@ -1,4 +1,5 @@
 from PIL import Image
+import numpy as np
 class post_data:
     def __init__(self, title, body_image, body_text, upvotes, downvotes, number_of_comments, flair):
         # can't have both text and image
@@ -6,12 +7,7 @@ class post_data:
             
         self.title = title
 
-        # TODO this convert png to rgb format, use it
-        # print(type(body_image))
-        self.body_image = Image.frombytes('RGBA', (int(len(body_image)**.5),int(len(body_image)**.5)), body_image, 'raw')
-        # rgb_im.save('colors.jpg')
-
-        # self.body_image = body_image
+        self.body_image = np.array(body_image)
         self.body_text = body_text
         self.upvotes = upvotes
         self.downvotes = downvotes
