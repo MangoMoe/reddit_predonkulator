@@ -10,36 +10,30 @@ print("Subreddit name: {}\n".format(subreddit.display_name))
 
 # print("Length of hot: {}\n".format(len(subreddit.hot())))
 for submission in subreddit.hot(limit = 1):
-    # top_level_comments = list(submission.comments)
-    # all_comments = submission.comments.list()
-    # submission = reddit.submission(id='39zje0')
-    # submission.comment_sort = 'new'
-    # top_level_comments = list(submission.comments)
     # print(submission.title)
     # pprint.pprint(vars(submission))
     print("Post text ---------------------------------------------------")
     print(submission.selftext)
     print("Comments ---------------------------------------------------")
     # This is important to fully flesh out the comment tree
+    # submission.refresh()
     submission.comments.replace_more(0)
     top_level_comments = list(submission.comments)
-    # all_comments = list(submission.comments)
     # this automatically does a breadth first search, but we want a depth first search
-    # all_comments = submission.comments.list()
-    # print(len(all_comments))
+    #   all_comments = submission.comments.list()
     # Using example code from https://praw.readthedocs.io/en/latest/tutorials/comments.html as a framework, also using CommentForrest documentation
-    # also using various python documentation/tutorials (duh)
-    # TODO to prepend the list just append (actually use extend) the other list to it duh
-    #   TODO this might be significantly slower sincce we are replacing the list and rebuilding it each time but I'm not sure what else to do...
-    # TODO make sure you use replace_more on the inner instances too
-    comment_queue = top_level_comments[:]
-    # TODO will replacing the comment queue affect the while loop?
+    #   also using various python documentation/tutorials (duh)
+    comment_queue = top_level_comments[::-1]
+    indentation_levels = [0]*len(comment_queue)
+    # print(indentation_levels)
     # TODO track depth with a separate queue that is the same length as comment_queue
     i = 0
     while comment_queue and i < 20:
-        comment = comment_queue.pop(0)
-        print("-------------------------------")
-        print(comment.body)
+        # print("-------------------------------")
+        comment = comment_queue.pop()
+        indentation_level = indentation_levels.pop()
+        indentation = "\t" * indentation_level
+        print(indentation + comment.body)
         # TODO see the praw documentation for CommentForrest to figure out how to do this safely in a loop
         #   trying this out below
         # while True:
@@ -51,16 +45,11 @@ for submission in subreddit.hot(limit = 1):
         #         print('Handling replace_more exception')
         #         print("exception was: \n{}".format(str(e)))
         #         time.sleep(1)
+        # print("*******")
+        # print(len(list(comment.replies)))
+        comment.refresh() # for some reason this refresh is vital or else it doesn't get all the comments
         comment.replies.replace_more(0)
-        temp_queue = comment.replies[:]
-        temp_queue.extend(comment_queue)
-        comment_queue = temp_queue
+        # print(len(list(comment.replies)))
+        comment_queue.extend(list(comment.replies[::-1]))
+        indentation_levels.extend([indentation_level + 1] * len(list(comment.replies)))
         i += 1
-
-    # for comment in all_comments:
-    #     # pprint.pprint(vars(comment))
-    #     print(comment.body)
-    #     # TODO you're probably gonna need some sort of recursive function
-    #     for reply in comment.replies:
-    #         print("reply")
-    #     break
