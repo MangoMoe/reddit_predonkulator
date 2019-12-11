@@ -6,15 +6,20 @@ import numpy as np
 reddit = praw.Reddit(user_agent="web:Reddit Predonkulator:0.1 (by /u/MangoMo3)")
 subreddit_name = input("Please input subreddit name: ")
 subreddit = reddit.subreddit(subreddit_name)
+num_posts = int(input("Please specify how many posts you want from r/{}: ".format(subreddit_name)))
+print("Extracting {} posts and their comments from {} to a file called {}, this will overwrite this file.".format(num_posts, subreddit_name, subreddit_name + "_corpus_file.corp"))
 
-print("Subreddit name: {}\n".format(subreddit.display_name))
 
 with open(subreddit_name + "_corpus_file.corp", "w", encoding="utf-8") as corpus_file:
     i = 0
     queue_lengths = []
-    for submission in tqdm(subreddit.hot(limit = 1)):
+    for submission in tqdm(subreddit.hot(limit = num_posts)):
         i += 1
-        corpus_file.write("\"" + submission.selftext + "\"")
+        if submission.selftext != "":
+            corpus_file.write("\r\n\"" + submission.title + "\n")
+            corpus_file.write(submission.selftext + "\"")
+        else:
+            corpus_file.write("\r\n\"" + submission.title + "\"")
         # This is important to fully flesh out the comment tree
         submission.comments.replace_more(limit=None)
         top_level_comments = list(submission.comments)
