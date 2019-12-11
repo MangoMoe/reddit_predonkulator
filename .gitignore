@@ -4,8 +4,9 @@ praw.ini
 # ignore json files for now
 *.json
 
-# ignore datasets
+# ignore datasets and corpus files
 datasets/
+*.corp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
