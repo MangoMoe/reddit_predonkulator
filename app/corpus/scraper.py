@@ -13,13 +13,16 @@ print("Extracting {} posts and their comments from {} to a file called {}, this 
 with open(subreddit_name + "_corpus_file.corp", "w", encoding="utf-8") as corpus_file:
     i = 0
     queue_lengths = []
+    # num_words = 0
     for submission in tqdm(subreddit.hot(limit = num_posts)):
         i += 1
         if submission.selftext != "":
             corpus_file.write("\r\n\"" + submission.title + "\n")
             corpus_file.write(submission.selftext + "\"")
+            # num_words += len(submission.title.split()) + len(submission.selftext.split())
         else:
             corpus_file.write("\r\n\"" + submission.title + "\"")
+            # num_words += len(submission.title.split())
         # This is important to fully flesh out the comment tree
         submission.comments.replace_more(limit=None)
         top_level_comments = list(submission.comments)
@@ -36,6 +39,7 @@ with open(subreddit_name + "_corpus_file.corp", "w", encoding="utf-8") as corpus
             indentation_level = indentation_levels.pop()
             indentation = "\t" * indentation_level
             comment_body = "\r\n\"" + comment.body + "\""
+            # num_words += len(comment.body.split())
             # found on stack overflow
             corpus_file.write(indentation.join(comment_body.splitlines(True))[1:])
             # This slows things down incrementally, while using limit=None above in submission.comments.replace_more slows it down all at once, I'm not really sure if there is a difference
@@ -46,3 +50,5 @@ with open(subreddit_name + "_corpus_file.corp", "w", encoding="utf-8") as corpus
             indentation_levels.extend([indentation_level + 1] * len(list(comment.replies)))
         queue_lengths.append(queue_length)
     print("Average number of comments per post was: {}".format(np.mean(np.array(queue_lengths))))
+    # print("Number of words per post/comment: {}".format(num_words / (np.sum(np.array(queue_lengths)) + num_posts)))
+    # print("Number of words: {}".format(num_words))
