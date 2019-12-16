@@ -7,6 +7,7 @@ praw.ini
 # ignore datasets and corpus files
 datasets/
 *.corp
+*.corp_temp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
